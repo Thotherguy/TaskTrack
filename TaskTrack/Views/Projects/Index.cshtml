@@ -1,0 +1,74 @@
+@model IEnumerable<TaskTrack.Models.Project>
+
+@{
+    ViewData["Title"] = "My Projects";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Projects</h2>
+        @if ((User.IsInRole("Admin") || User.IsInRole("Manager")))
+{
+<a asp-action="Create" class="btn btn-primary">
+            + Create Project
+        </a>
+}
+
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No projects are currently available to you.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Project Name</th>
+                    <th>Description</th>
+                    <th>Start Date</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var project in Model)
+                {
+                    <tr>
+                        <td>@project.Name</td>
+                        <td>@project.Description</td>
+                        <td>@project.StartDate.ToShortDateString()</td>
+                        <td>@project.DueDate?.ToShortDateString()</td>
+                        <td>
+                            <a asp-action="Details"
+                               asp-route-id="@project.Id"
+                               class="btn btn-info btn-sm">Details</a>
+
+                            @if ((User.IsInRole("Admin") || User.IsInRole("Manager")) && project.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+<a asp-action="Edit"
+                               asp-route-id="@project.Id"
+                               class="btn btn-warning btn-sm">Edit</a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@project.Id"
+                               class="btn btn-danger btn-sm">Delete</a>
+}
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

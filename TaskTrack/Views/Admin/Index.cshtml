@@ -1,0 +1,74 @@
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+@inject Microsoft.AspNetCore.Identity.UserManager<Microsoft.AspNetCore.Identity.IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "User Administration";
+}
+
+<div class="container mt-4">
+    <h2>User Administration</h2>
+    <p>Manage registered users and their roles.</p>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Change Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                var roles = await UserManager.GetRolesAsync(user);
+                bool isAdmin = roles.Contains("Admin");
+
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@string.Join(", ", roles)</td>
+                    <td>
+                        @if (!isAdmin)
+                        {
+                            <form asp-action="ChangeRole"
+                                  method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="userId"
+                                       value="@user.Id" />
+
+                                <select name="role"
+                                        class="form-select mb-2">
+                                    <option value="Member" selected="@roles.Contains("Member")">
+                                        Member
+                                    </option>
+                                    <option value="Manager" selected="@roles.Contains("Manager")">
+                                        Manager
+                                    </option>
+                                </select>
+
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm">
+                                    Update Role
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                Protected administrator
+                            </span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

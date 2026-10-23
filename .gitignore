@@ -1,0 +1,30 @@
+# Build / IDE output
+**/bin/
+**/obj/
+.vs/
+.vscode/
+*.user
+*.suo
+TestResults/
+artifacts/
+# Local configuration and credentials
+**/appsettings.Development.json
+**/appsettings.*.local.json
+**/secrets.json
+**/Properties/PublishProfiles/
+.env
+.env.*
+*.publishsettings
+*.pfx
+*.pem
+*.key
+# Databases and logs
+*.mdf
+*.ldf
+*.db
+*.db-shm
+*.db-wal
+*.log
+# OS files
+.DS_Store
+Thumbs.db

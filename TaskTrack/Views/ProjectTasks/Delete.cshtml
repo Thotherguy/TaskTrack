@@ -1,0 +1,40 @@
+﻿@model TaskTrack.Models.ProjectTask
+
+@{
+    ViewData["Title"] = "Delete Task";
+}
+
+<div class="container mt-4">
+    <h2>Delete Task</h2>
+
+    <div class="alert alert-danger">
+        Are you sure you want to permanently delete this task?
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4>@Model.Title</h4>
+            <p>@Model.Description</p>
+
+            <p><strong>Status:</strong> @Model.Status</p>
+            <p><strong>Priority:</strong> @Model.Priority</p>
+        </div>
+    </div>
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.Id"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn btn-danger">
+            Confirm Delete
+        </button>
+
+        <a asp-action="Index"
+           asp-route-projectId="@Model.ProjectId"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+@model TaskTrack.Models.ProjectMembersViewModel
+@{ ViewData["Title"] = "Project Members"; }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"><div><p class="text-muted mb-1">@Model.Project.Name</p><h1>Project members</h1></div><a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary">Back to project</a></div>
+@if (TempData["Success"] != null) { <div class="alert alert-success" role="status">@TempData["Success"]</div> }
+<section class="card mb-4"><div class="card-body"><h2 class="h5">Add a registered member</h2><p class="text-muted">Enter the email address they used to register for TaskTrack.</p>
+<form asp-action="Add" asp-route-projectId="@Model.Project.Id" method="post" class="row g-2 align-items-end">
+    <div class="col-md-8"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" autocomplete="off" /><span asp-validation-for="Email" class="text-danger"></span></div>
+    <div class="col-md-4"><button type="submit" class="btn btn-primary">Add member</button></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+</form></div></section>
+<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Email</th><th>Membership</th><th>Action</th></tr></thead><tbody>
+@foreach (var user in Model.Members) {
+    bool owner = user.Id == Model.Project.OwnerId;
+    <tr><td>@user.Email</td><td>@(owner ? "Owner" : "Member")</td><td>
+    @if (owner) { <span class="text-muted">Project owner</span> }
+    else { <form asp-action="Remove" asp-route-projectId="@Model.Project.Id" method="post"><input type="hidden" name="userId" value="@user.Id" /><button type="submit" class="btn btn-outline-danger btn-sm">Remove member</button><small class="text-muted ms-2">Their task assignments will be cleared.</small></form> }
+    </td></tr>
+}
+</tbody></table></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

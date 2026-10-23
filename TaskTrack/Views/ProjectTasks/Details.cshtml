@@ -1,0 +1,27 @@
+@model TaskTrack.Models.TaskDetailsViewModel
+@{ ViewData["Title"] = Model.Task.Title; }
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4"><div><p class="text-muted mb-1">@Model.Task.Project.Name</p><h1>@Model.Task.Title</h1><span class="badge bg-primary">@Model.Task.Status</span> <span class="badge bg-secondary">@Model.Task.Priority priority</span></div><a asp-action="Index" asp-route-projectId="@Model.Task.ProjectId" class="btn btn-outline-secondary">Back to tasks</a></div>
+<p class="text-break" style="white-space:pre-wrap">@Model.Task.Description</p>
+<p class="text-muted">Due: @(Model.Task.DueDate?.ToShortDateString() ?? "No date")</p>
+@if (TempData["Success"] != null) { <div class="alert alert-success" role="status">@TempData["Success"]</div> }
+@if (TempData["CommentError"] != null) { <div class="alert alert-danger" role="alert">@TempData["CommentError"]</div> }
+<div class="row g-4">
+<section class="col-lg-7"><h2 class="h4">Comments</h2>
+<form asp-controller="TaskComments" asp-action="Add" asp-route-taskId="@Model.Task.Id" method="post" class="mb-4">
+    <label asp-for="Input.Body" class="form-label"></label><textarea asp-for="Input.Body" rows="3" maxlength="2000" class="form-control" required></textarea>
+    <span asp-validation-for="Input.Body" class="text-danger"></span><button class="btn btn-primary mt-2" type="submit">Add comment</button>
+</form>
+@if (!Model.Comments.Any()) { <p class="text-muted">No comments yet.</p> }
+@foreach (var comment in Model.Comments) {
+<article class="card mb-3"><div class="card-body"><div class="small text-muted mb-2">@(Model.UserNames.GetValueOrDefault(comment.AuthorId, "Deleted user")) · @comment.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm") UTC</div><p class="mb-0 text-break" style="white-space:pre-wrap">@comment.Body</p></div></article>
+}
+<nav aria-label="Comment pages" class="d-flex gap-2">
+@if (Model.CommentPage > 1) { <a asp-action="Details" asp-route-id="@Model.Task.Id" asp-route-commentPage="@(Model.CommentPage - 1)" class="btn btn-outline-secondary">Newer comments</a> }
+@if (Model.HasMoreComments) { <a asp-action="Details" asp-route-id="@Model.Task.Id" asp-route-commentPage="@(Model.CommentPage + 1)" class="btn btn-outline-secondary">Older comments</a> }
+</nav>
+</section>
+<section class="col-lg-5"><h2 class="h4">Task history</h2><p class="small text-muted">Latest 30 changes</p>
+@if (!Model.Activity.Any()) { <p class="text-muted">Changes made from now on will appear here.</p> }
+<ul class="list-group">@foreach (var item in Model.Activity) { <li class="list-group-item"><div>@item.Summary</div><small class="text-muted">@(item.ActorId == null ? "System" : Model.UserNames.GetValueOrDefault(item.ActorId, "Deleted user")) · @item.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm") UTC</small></li> }</ul>
+</section></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

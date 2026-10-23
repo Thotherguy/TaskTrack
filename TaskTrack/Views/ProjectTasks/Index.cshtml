@@ -1,0 +1,142 @@
+@model IEnumerable<TaskTrack.Models.ProjectTask>
+
+@{
+    ViewData["Title"] = "Project Tasks";
+    var project = (TaskTrack.Models.Project)ViewBag.Project;
+}
+
+<div class="container mt-4">
+    <h2>Tasks for @project.Name</h2>
+    <p class="text-muted">@project.Description</p>
+
+    <div class="mb-3">
+        @if ((User.IsInRole("Admin") || User.IsInRole("Manager")) && project.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+<a asp-action="Create"
+           asp-route-projectId="@project.Id"
+           class="btn btn-primary">
+            + Add Task
+        </a>
+}
+
+
+        <a asp-controller="Projects"
+           asp-action="Details"
+           asp-route-id="@project.Id"
+           class="btn btn-secondary">
+            Back to Project
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No tasks have been created for this project.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    <tr>
+                        <td><a asp-action="Details" asp-route-id="@task.Id">@task.Title</a></td>
+                        <td>
+                            @if (task.Status == "Completed")
+                            {
+                                <span class="badge bg-success">
+                                    Completed
+                                </span>
+                            }
+                            else if (task.Status == "In Progress")
+                            {
+                                <span class="badge bg-primary">
+                                    In Progress
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    To Do
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (task.Priority == "High")
+                            {
+                                <span class="badge bg-danger">High</span>
+                            }
+                            else if (task.Priority == "Medium")
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Medium
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark">
+                                    Low
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @(task.DueDate?.ToShortDateString() ?? "Not set")
+                        </td>
+                        <td>
+                            @if ((User.IsInRole("Admin") || User.IsInRole("Manager")) && project.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value) {
+<a asp-action="Edit"
+                               asp-route-id="@task.Id"
+                               class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@task.Id"
+                               class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        
+}
+@if (User.IsInRole("Member") &&
+     task.AssignedUserId ==
+     User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+{
+    <form asp-action="UpdateStatus"
+          asp-route-id="@task.Id"
+          method="post">
+        @Html.AntiForgeryToken()
+        <select name="status" class="form-select form-select-sm">
+            <option value="To Do" selected="@(task.Status == "To Do")">To Do</option>
+            <option value="In Progress" selected="@(task.Status == "In Progress")">In Progress</option>
+            <option value="Completed" selected="@(task.Status == "Completed")">Completed</option>
+        </select>
+        <button type="submit"
+                class="btn btn-primary btn-sm mt-1">
+            Update Status
+        </button>
+    </form>
+}
+</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
