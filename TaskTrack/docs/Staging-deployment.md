@@ -22,7 +22,7 @@ Staging explicitly permits registration without confirmed email for authorized c
 
 ## Source access
 
-The repository is intended to remain private. Confirm how the owner will grant genuine read-only access. A personal-account private repository does not provide the same Read role available in an organization; do not invite reviewers with write access as a workaround. Organization ownership/access configuration must be agreed before invitations are sent.
+The owner authorized public source publication. Source: https://github.com/Thotherguy/TaskTrack . Visitors can read and clone without collaborator write access. Credentials and actual local configuration are excluded.
 
 ## Commands
 

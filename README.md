@@ -43,4 +43,4 @@ The database must be migrated before the first application start. `/healthz` rep
 
 Only the agreed staging hostname, synthetic test accounts, and authorized testing window are in scope. Do not test hosting infrastructure, classmates' unrelated accounts, or production services. Do not perform denial-of-service testing without separate agreement.
 
-Repository access for reviewers should be read-only. Staging URL and reviewer instructions will be added after deployment verification.
+Source is public at https://github.com/Thotherguy/TaskTrack . The staging endpoint is https://tasktrack-thotherguy-staging.azurewebsites.net . Deployment verification is pending: Azure Free plan process-stop quota was exhausted during initial startup troubleshooting on October 23, 2026. Do not treat the endpoint as ready until `/healthz` and hosted workflows are verified. See the deployment runbook for limits.
