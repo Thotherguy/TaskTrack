@@ -43,4 +43,10 @@ The database must be migrated before the first application start. `/healthz` rep
 
 Only the agreed staging hostname, synthetic test accounts, and authorized testing window are in scope. Do not test hosting infrastructure, classmates' unrelated accounts, or production services. Do not perform denial-of-service testing without separate agreement.
 
-Source is public at https://github.com/Thotherguy/TaskTrack . The staging endpoint is https://tasktrack-thotherguy-staging.azurewebsites.net . Deployment verification is pending: Azure Free plan process-stop quota was exhausted during initial startup troubleshooting on October 23, 2026. Do not treat the endpoint as ready until `/healthz` and hosted workflows are verified. See the deployment runbook for limits.
+Source is public at https://github.com/Thotherguy/TaskTrack . Verified staging: https://thotherguy-001-site1.gtempurl.com .
+
+Staging runs on a myASP.NET 60-day free trial with SQL Server 2022. Register then log in; new users are Members. Reviewer Manager/Member credentials are distributed separately and must never be committed. Manager owns the synthetic demonstration project; the assigned Member sees its walkthrough task. The outsider reviewer account is outside that project. Admin can read across projects; project writes remain owner-only.
+
+Hosted verification passed 41 functional/security checks plus 25 additional authorization, cleanup and demo-setup checks. HTTPS home, registration, login and database health returned 200. These checks do not constitute a complete security audit. Detailed tester instructions: [Deployment handover](TaskTrack/docs/Deployment-handover.md).
+
+The trial expires; confirm its expiry in the hosting panel and keep it active for the agreed assessment window. No paid plan was enabled. The earlier Azure deployment is not the assessment endpoint.

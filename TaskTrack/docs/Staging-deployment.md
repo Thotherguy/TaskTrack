@@ -1,4 +1,6 @@
-# Staging deployment runbook
+# Azure deployment runbook
+
+The verified assessment deployment uses myASP.NET. See [Deployment handover](Deployment-handover.md). This document records the alternative Azure deployment procedure.
 
 ## Environment
 
